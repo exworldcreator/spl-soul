@@ -1,0 +1,23 @@
+# Rust/Anchor specific
+target/
+.anchor/
+**/*.rs.bk
+node_modules/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+
+# Build artifacts
+dist/
+build/
