@@ -1,7 +1,13 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Mint, Token, TokenAccount};
 
-// Замените этот ключ на ваш реальный Base58-ключ, сгенерированный через `anchor keys gen`
+pub mod presale;
+pub mod events;
+
+use presale::*;
+use events::*;
+
+// Replace this key with your real Base58 key generated via `anchor keys gen`
 declare_id!("G1RZSqt72nyisqmEaocAMV42fKwepARaAo17JtL1rGoW");
 
 #[program]
@@ -10,21 +16,21 @@ mod soul_token {
 
     pub fn initialize(ctx: Context<Initialize>, total_supply: u64) -> Result<()> {
         let state = &mut ctx.accounts.state;
-        state.total_supply = total_supply * 10u64.pow(6); // Учитываем 6 decimals
+        state.total_supply = total_supply * 10u64.pow(6); // Account for 6 decimals
         state.authority = ctx.accounts.authority.key();
 
         state.team_supply = state.total_supply * 10 / 100; // 10%
         state.dex_liquidity_supply = state.total_supply * 5 / 100; // 5%
         state.cex_marketing_supply = state.total_supply * 10 / 100; // 10%
-        state.cex_marketing_unlocked = state.cex_marketing_supply; // Доступно на TGE
+        state.cex_marketing_unlocked = state.cex_marketing_supply; // Available at TGE
         state.development_supply = state.total_supply * 30 / 100; // 30%
-        state.development_unlocked = state.development_supply / 6; // 5% на TGE
+        state.development_unlocked = state.development_supply / 6; // 5% at TGE
         state.community_supply = state.total_supply * 15 / 100; // 15% (1.5B SOUL)
-        state.community_unlocked = state.community_supply * 30 / 100; // 30% на TGE
+        state.community_unlocked = state.community_supply * 30 / 100; // 30% at TGE
 
         state.tge_time = Clock::get()?.unix_timestamp;
 
-        // Остальные 30% (Pre Sale) будут управляться отдельным контрактом
+        // The remaining 30% (Pre Sale) will be managed by a separate contract
         Ok(())
     }
 
